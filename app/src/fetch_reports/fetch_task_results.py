@@ -19,7 +19,6 @@ def fetch_task_results(token, academic_year_ids, base_url):
 
     # Fetch course list with parameters
     course_params = {
-        # 'status': 'retired',
         'limit': 100,
         'offset': 0
     }

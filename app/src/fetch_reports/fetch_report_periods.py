@@ -3,7 +3,7 @@ import time
 from datetime import datetime
 from urllib.parse import urlencode
 
-def fetch_report_periods(token, academic_year_ids, base_url, start_year, end_year):
+def fetch_report_periods(token, academic_year_ids, base_url, start_year, end_year, return_ids=False):
     # Start time
     start_time_formatted = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -19,6 +19,9 @@ def fetch_report_periods(token, academic_year_ids, base_url, start_year, end_yea
     total_duration = 0
     total_report_periods_count = 0
     academic_years = range(start_year, end_year + 1)
+
+    # List to hold fetched report period IDs
+    fetched_report_period_ids = []
 
     for academic_year in academic_years:
         year_id = academic_year_ids.get(academic_year)
@@ -53,6 +56,14 @@ def fetch_report_periods(token, academic_year_ids, base_url, start_year, end_yea
                 # Report periods
                 report_periods = json_response.get('data', [])
                 all_report_periods.extend(report_periods)
+
+                # Extracting report_period_ids and adding to the list
+                for year_data in report_periods:
+                    for period in year_data.get('report_periods', []):
+                        report_period_id = period.get('report_period_id')
+                        if report_period_id:
+                            fetched_report_period_ids.append(report_period_id)
+
                 report_periods_count = sum(len(year_data.get('report_periods', [])) for year_data in report_periods)
 
                 total_report_periods_count += report_periods_count
@@ -93,3 +104,9 @@ def fetch_report_periods(token, academic_year_ids, base_url, start_year, end_yea
     print(f"Finish Time: {end_time_formatted}")
     print(f"Total duration: {total_duration:.2f} seconds")
     print("============\n")
+
+    # Return the fetched report period IDs if return_ids is True
+    if return_ids:
+        return fetched_report_period_ids
+    
+    return all_report_periods  # Return the report periods if return_ids is False
