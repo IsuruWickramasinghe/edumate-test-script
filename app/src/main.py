@@ -47,7 +47,7 @@ def main():
             fetch_task_results(token, academic_year_ids, base_url)
 
         elif choice == "4":
-            report_period_ids = fetch_report_periods(token, academic_year_ids, base_url, 2024, 2024, return_ids=True)
+            report_period_ids = fetch_report_periods(token, academic_year_ids, base_url, start_year, end_year, return_ids=True)
             fetch_student_course_results(token, base_url, report_period_ids)
 
         elif choice == "0":
